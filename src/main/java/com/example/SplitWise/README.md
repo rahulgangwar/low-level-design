@@ -1,15 +1,32 @@
 # Designing Splitwise
 
 ## Requirements
+- User can create group and add members
+- User can add expense and select who paid
+- Expense can be split equally or by percentage
+- The system calculates balances between the members
+- User can view their debts
 
-1. The system should allow users to create accounts and manage their profile information.
-2. Users should be able to create groups and add other users to the groups.
-3. Users should be able to add expenses within a group, specifying the amount, description, and participants.
-4. The system should automatically split the expenses among the participants based on their share.
-5. Users should be able to view their individual balances with other users and settle up the balances.
-6. The system should support different split methods, such as equal split, percentage split, and exact amounts.
-7. Users should be able to view their transaction history and group expenses.
-8. The system should handle concurrent transactions and ensure data consistency.
+### Core Entities
+
+- Group and Members
+```mermaid
+classDiagram
+ class Group{
+     - id : String
+     - name : String
+     - members : List~User~
+     - expenses : List~Expense~
+ }
+ 
+ class User{
+     - id : String
+     - name : String
+     - email : String
+     - 
+ }
+```
+
 
 ## Class Diagram
 
