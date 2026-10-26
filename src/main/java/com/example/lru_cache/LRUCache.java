@@ -42,7 +42,7 @@ class LRUCache {
         if (node == null) {
             if (cache.size() == capacity) {
                 Node lru = tail.prev;
-                remove(lru);
+                removeNode(lru);
                 cache.remove(lru.key);
             }
             Node newNode = new Node(key, value);
@@ -55,11 +55,11 @@ class LRUCache {
     }
 
     private void moveToHead(Node node) {
-        remove(node);
+        removeNode(node);
         addToHead(node);
     }
 
-    private void remove(Node node) {
+    private void removeNode(Node node) {
         Node next = node.next;
         Node prev = node.prev;
         prev.next = next;
