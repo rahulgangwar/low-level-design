@@ -2,16 +2,19 @@ package com.example.lru_cache;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 class LRUCache {
     final Map<Integer, Node> cache = new HashMap<>();
     final Node head;
     final Node tail;
     final Integer capacity;
+    final int ttlInSecs;
 
     class Node {
         int key;
         int val;
+        long expiryTime;
         Node next;
         Node prev;
 
@@ -19,19 +22,29 @@ class LRUCache {
             this.key = key;
             this.val = val;
         }
+
+        @Override
+        public String toString(){
+            return "key:" + key + " value:" + val + " expiry:" + expiryTime;
+        }
     }
 
-    public LRUCache(int capacity) {
+    public LRUCache(int capacity, int ttlInSecs) {
         head = new Node(-1, -1);
         tail = new Node(-1, -1);
         head.next = tail;
         tail.prev = head;
         this.capacity = capacity;
+        this.ttlInSecs = ttlInSecs;
     }
 
     public int get(int key) {
         Node node = cache.get(key);
         if (node == null) return -1;
+        else if (node.expiryTime < System.currentTimeMillis()) {
+            cache.remove(key);
+            return -1;
+        }
 
         moveToHead(node);
         return node.val;
@@ -74,5 +87,10 @@ class LRUCache {
         node.next = next;
         next.prev = node;
         node.prev = head;
+        updateExpiryTime(node);
+    }
+
+    private void updateExpiryTime(Node node) {
+        node.expiryTime = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(ttlInSecs);
     }
 }
